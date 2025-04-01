@@ -38,6 +38,25 @@
 
 ## インストール
 
+### 方法1: Poetryを使用（推奨）
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/hokalab/hatena-bookmark-app.git
+cd hatena-bookmark-app
+
+# Poetryがインストールされていない場合はインストール
+# curl -sSL https://install.python-poetry.org | python3 -
+
+# 依存パッケージをインストール
+poetry install
+
+# 開発用依存パッケージも含めてインストール
+poetry install --with dev
+```
+
+### 方法2: pipを使用（従来の方法）
+
 ```bash
 # リポジトリをクローン
 git clone https://github.com/mump0nd/hatena-bookmark-app.git
@@ -64,7 +83,12 @@ pip install -r requirements-dev.txt
 1. アプリケーションを起動します：
 
 ```bash
-# 開発サーバーを起動
+# Poetryを使用する場合（推奨）
+poetry run python app.py
+# または
+poetry run flask run
+
+# 従来の方法（venv使用時）
 flask run
 # または
 python -m src.hatena_bookmark.app
@@ -111,13 +135,30 @@ http://localhost:5001/hotentry/all/feed?threshold=200
 │   └── Dockerfile             # Dockerファイル
 ├── .gitignore                 # Gitの除外設定
 ├── README.md                  # プロジェクト説明
-├── requirements.txt           # 本番用依存パッケージ
-├── requirements-dev.txt       # 開発用依存パッケージ
+├── pyproject.toml             # Poetryプロジェクト設定（依存関係管理）
+├── poetry.lock                # Poetryロックファイル（依存関係の正確なバージョン）
+├── requirements.txt           # 本番用依存パッケージ（従来の方法用）
+├── requirements-dev.txt       # 開発用依存パッケージ（従来の方法用）
 ├── wsgi.py                    # WSGI設定
 └── Procfile                   # Renderデプロイ設定
 ```
 
 ## テスト実行
+
+### Poetryを使用する場合（推奨）
+
+```bash
+# 全てのテストを実行
+poetry run pytest
+
+# カバレッジレポートを生成
+poetry run pytest --cov=src
+
+# 特定のテストを実行
+poetry run pytest tests/test_api.py
+```
+
+### 従来の方法（venv使用時）
 
 ```bash
 # 全てのテストを実行
@@ -150,8 +191,8 @@ pytest tests/test_api.py
    - **Region**: お近くのリージョン（例：Singapore）
    - **Branch**: main
    - **Runtime**: Python 3
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn app:app --timeout 120 --workers 4`
+   - **Build Command**: `pip install poetry && poetry install --only main`
+   - **Start Command**: `poetry run gunicorn app:app --timeout 120 --workers 4`
 
 2. 「Create Web Service」ボタンをクリックします
 
@@ -241,12 +282,21 @@ render logs hatena-bookmark-app --filter "error"
 
 ## 開発者向け情報
 
+### 依存関係管理
+
+- Poetryを使用した依存関係管理（推奨）
+  - `poetry add パッケージ名` で依存関係を追加
+  - `poetry add --group dev パッケージ名` で開発用依存関係を追加
+  - `poetry update` で依存関係を更新
+- 従来のpipとrequirements.txtによる管理もサポート
+
 ### コーディング規約
 
 - PEP8に準拠したコードスタイル
 - Googleスタイルのドキュメント文字列
 - ruffによるリンティングとフォーマット
 - mypyによる型チェック
+- Poetryの設定はpyproject.tomlに集約
 
 ### 貢献方法
 

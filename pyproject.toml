@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "hatena-bookmark-app"
+version = "0.1.0"
+description = "はてなブックマークのホットエントリーをRSSフィードとして提供するサービス"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+packages = [{include = "hatena_bookmark", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+flask = "2.3.3"
+requests = "2.31.0"
+python-dateutil = "2.8.2"
+gunicorn = "21.2.0"
+apscheduler = "3.10.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "7.4.0"
+pytest-cov = "4.1.0"
+black = "23.7.0"
+isort = "5.12.0"
+mypy = "1.5.1"
+ruff = "0.0.287"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+select = ["E", "F", "B", "I"]
+ignore = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
